@@ -1,0 +1,24 @@
+---
+defaultNamespace: gpu-operator
+
+helm:
+  releaseName: gpu-operator
+  repo: https://helm.ngc.nvidia.com/nvidia
+  chart: gpu-operator
+  version: v1.10.1
+  values:
+    driver:
+      enabled: false
+      licensingConfig:
+        configMapName: licensing-config
+    toolkit:
+      enabled: false
+      env:
+        - name: CONTAINERD_CONFIG
+          value: /var/lib/rancher/rke2/agent/etc/containerd/config.toml
+        - name: CONTAINERD_SOCKET
+          value: /run/k3s/containerd/containerd.sock
+        - name: CONTAINERD_RUNTIME_CLASS
+          value: nvidia
+        - name: CONTAINERD_SET_AS_DEFAULT
+          value: "true"
