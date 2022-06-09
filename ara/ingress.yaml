@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ara
+  namespace: ara
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+  - host: "ara.eschercloud.dev"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: ara
+            port:
+              number: 8000
+  tls:
+  - hosts:
+    - ara.eschercloud.dev
+    secretName: ara-cert
+
+
