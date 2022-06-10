@@ -1,4 +1,17 @@
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ara
+  namespace: ara
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -27,6 +40,8 @@ spec:
           env:
             - name: ARA_ALLOWED_HOSTS
               value: "['ara.eschercloud.dev', '127.0.0.1']"
+            - name: ARA_DATABASE_NAME
+              value: "/var/opt/ara/ansible.sqlite"
           resources:
             limits:
               cpu: 500m
@@ -34,3 +49,10 @@ spec:
             requests:
               cpu: 100m
               memory: 1024Mi
+          volumeMounts:
+            - mountPath: /var/opt/ara
+              name: ara
+      volumes:
+      - name: ara
+        persistentVolumeClaim:
+          claimName: ara
