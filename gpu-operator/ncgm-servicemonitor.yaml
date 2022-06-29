@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nvidia-dcgm-service-monitor
+  namespace: cattle-monitoring-system
+spec:
+  endpoints:
+  - port: metrics
+  jobLabel: gpu-metrics
+  namespaceSelector:
+    matchNames:
+    - gpu-operator
+  selector:
+    matchLabels:
+      app: nvidia-dcgm-exporter
+  endpoints:
+  - path: /metrics
+    relabelings:
+    - sourceLabels: [__meta_kubernetes_pod_node_name]
+      action: replace
+      targetLabel: kubernetes_node
+
+
